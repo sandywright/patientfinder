@@ -1,21 +1,19 @@
-doctype html(lang=en)
-head
-	title Clerk | #{title}
+extends layout
 
-	body
-		h1 Sign Up
+block content
+	.container.pt-3
 		//register form
-		form(method='POST' action='/register')
-			div.form-group
-				label(for='name') Name:
+		form.form-horizontal(method='POST' action='/register')
+			.form-group
+				label.col-xs-6(for='name') Name:
 				input#name.form-control(type='text', placeholder='first and last' name='name')
-			div.form-group
+			.form-group
 				label(for='email') Email:
 				input#email.form-control(type='email', placeholder='name@email.com' name='email')
-			div.form-group
+			.form-group
 				label(for='pw') Password:
 				input#pw.form-control(type='password' name='password')
-			div.form-group
+			.form-group
 				label(for='pw2') Confirm Password:
 				input#pw2.form-control(type='password' name='confirmPassword')
 			button.btn.btn-primary(type='submit') Sign up

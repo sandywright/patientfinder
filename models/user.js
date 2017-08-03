@@ -26,7 +26,7 @@ var UserSchema = new Schema({
 
 //authenticate input against database documents
 UserSchema.statics.authenticate = function(email, password, callback) {
-	User.findOne({ email:email })
+	User.findOne({ email: email })
 		.exec(function(error, user) {
 			if(error) {
 				return callback(error);

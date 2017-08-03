@@ -1,15 +1,18 @@
-doctype html(lang=en)
-head
-	title Clerk | #{title}
+extends layout
 
-	body
-		h1 Log In
+block content
+	.container.pt-3
 		//login form
-		form(method='POST' action='/login')
-			div.form-group
-				label(for='email') Email
-				input.form-control(type='text' id='email' placeholder='email' name='email')
-			div.form-group
-				label(for='password') Password
-				input.form-control(type='password' id='password' placeholder='password' name='password')
-			button.btn.btn-primary(type='submit') Log in 
+		form.form-horizontal(method='POST' action='/login')
+			.form-group
+				label.control-label(for='email') Email:
+				input#email.form-control(type='email' name='email')
+			.form-group
+				label.control-label(for='password') Password:
+				input#pw.form-control(type='password' name='password')
+			.form-group
+				button.btn.btn-default(type='submit') Log in
+		
+
+
+

@@ -1,24 +1,18 @@
 'use strict';
 
 var express = require("express");
-var app = express();
 var routes = require('./routes');
 var bodyParser = require('body-parser');
 var logger = require("morgan");
 var session = require("express-session");
-
-// use sessions for tracking logins
-app.use(session({
-	secret: 'Sandy loves you',
-	resave: true, 
-	saveUninitialized: false
-}));
+var MongoStore = require('connect-mongo')(session);
+var app = express();
 
 app.use(logger("dev"));
 
 // parse incoming requests
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // view engine set up
@@ -26,7 +20,7 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
 
-// connec to database
+// connect to database
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/pf");
 
@@ -38,6 +32,35 @@ db.on("error", function(err){
 
 db.once("open", function(){
 	console.log("db connection successful");
+});
+
+// use sessions for tracking logins
+app.use(session({
+	secret: 'Sandy loves you',
+	resave: false, 
+	saveUninitialized: true,
+	store: new MongoStore({
+		mongooseConnection: db
+	})
+})); 
+
+
+// make user ID available in templates
+app.use(function(req, res, next) {
+	res.locals.currentUser = req.session.userId;
+	next();
+});
+
+// set up cross-origin requests
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header('Access-Control-Allow-Credentials', true);
+	if(req.method === "OPTIONS") {
+		res.header("Access-Control-Allow-Methods", "PUT,POST,DELETE");
+		return res.status(200).json({});
+	}
+	next();
 });
 
 // include routes
@@ -62,7 +85,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3001;
 
 app.listen(port, function() {
 	console.log("Express server is listening on port", port);

@@ -10,9 +10,13 @@ var sortPatients = function(a, b) {
 
 var PatientSchema = new Schema({
 	location: String, 
+	bed: String,
 	gender: String,
+	age: Number,
+	background: String,
 	createdAt: {type: Date, default: Date.now}, 
-	updatedAt: {type: Date, default: Date.now}, 
+	updatedAt: {type: Date, default: Date.now},
+	addedBy: String, 
 	clerks: {type: Number, default: 0} 
 });
 
@@ -39,8 +43,10 @@ var HospitalSchema = new Schema({
 
 HospitalSchema.pre("save", function(next){
 	this.patients.sort(sortPatients);
+	this.updatedAt = Date.now() 
 	next();
 });
+
 
 var Hospital = mongoose.model("Hospital", HospitalSchema);
 

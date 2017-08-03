@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 var Hospital = require('./models/hospital').Hospital;
 var User = require('./models/user').User;
+var mid = require('./middleware');
 
 router.param("hID", function(req, res, next, id){
 	Hospital.findById(id, function(err, doc){
@@ -28,8 +29,47 @@ router.param("pID", function(req, res, next, id){
 	next();
 });
 
+//GET /index
+// Route for cover page
+router.get("/index", mid.loggedOut, function(req, res, next) {
+	return res.render('index');
+});
+
+//GET /profile
+router.get("/profile", mid.requiresLogin, function(req, res, next) {
+	if(! req.session.userId) {
+		var err = new Error("You are not logged in");
+		err.status = 403;
+		return next(err);
+	}
+
+	User.findById(req.session.userId)
+		.exec(function (error, user) {
+			if(error) {
+				return next(error);
+			} else {
+				res.json(user);
+			}
+		});
+});
+
+//GET /logout
+router.get("/logout", function(req, res, next) {
+	if(req.session) {
+		//delete session object
+		req.session.destroy(function(err) {
+			if(err) {
+				return next(err);
+			} else {
+				//return res.redirect('/home');
+				return res.json('session destroyed');
+			}
+		});
+	} 
+});
+
 //GET /login
-router.get("/login", function(req, res, next) {
+router.get("/login", mid.loggedOut, function(req, res, next) {
 	return res.render('login', { title: 'Login'});
 });
 
@@ -43,7 +83,9 @@ router.post("/login", function(req, res, next) {
 				return next(err);
 			} else {
 				req.session.userId = user._id;
-				return res.redirect('/hospitals');
+				res.status(201);
+				res.json(req.session);
+				//return res.redirect('http://localhost:3000/home');
 			}
 		});
 	} else {
@@ -56,7 +98,7 @@ router.post("/login", function(req, res, next) {
 
 //GET /Register
 // Route for new user resgistration
-router.get("/register", function(req, res, next) {
+router.get("/register", mid.loggedOut, function(req, res, next) {
 	return res.render('register', { title: 'Sign Up'});
 });
 
@@ -88,7 +130,8 @@ router.post("/register", function(req, res, next) {
 				return next(error);
 			} else {
 				req.session.userId = user._id;
-				return res.redirect('/hospitals');
+				res.json(user);
+				//return res.redirect('/profile');
 			}
 		});
 
@@ -101,7 +144,7 @@ router.post("/register", function(req, res, next) {
 
 //GET /hospitals
 // Route for hospitals collection
-router.get("/hospitals", function(req, res, next) {
+router.get("/hospitals", mid.requiresLogin, function(req, res, next) {
 	if(! req.session.userId) {
 		var err = new Error("You are not authorized to view this page");
 		err.status = 403;
@@ -112,9 +155,12 @@ router.get("/hospitals", function(req, res, next) {
 			if (error) {
 				return next(error);
 			} else {
-				Hospital.find({}, null, {sort: {createdAt: -1}}, function(err, hospitals){
-					if(err) return next(err);
-					res.json(hospitals);
+				Hospital.find({}, null, {sort: {createdAt: -1}}, function(error, hospitals){
+					if(error) {
+						return next(error);
+					} else {
+						res.json(hospitals);
+					}
 				});
 			}
 		});
@@ -122,7 +168,7 @@ router.get("/hospitals", function(req, res, next) {
 
 //POST /hospitals
 // Route for creating hospital
-router.post("/hospitals", function(req, res, next) {
+router.post("/hospitals", mid.requiresLogin, function(req, res, next) {
 	var hospital = new Hospital(req.body);
 	hospital.save(function(err, hospital){
 		if(err) return next(err);
@@ -133,7 +179,7 @@ router.post("/hospitals", function(req, res, next) {
 
 //GET /hospitals/:id
 // Route for specific hospital
-router.get("/hospitals/:hID", function(req, res, next) {
+router.get("/hospitals/:hID", mid.requiresLogin, function(req, res, next) {
 		res.json(req.hospital);
 });
 
@@ -146,6 +192,18 @@ router.post("/hospitals/:hID/patients", function(req, res, next) {
 		res.status(201);
 		res.json(hospital);
 	});
+});
+
+//GET /hospitals/:id/patients
+// Route for patients at a hospital
+router.get("/hospitals/:hID/patients", function(req, res, next) {
+		res.json(req.hospital.patients);
+});
+
+//GET /hospitals/:hID/patients/:pID
+// Route for specific patient
+router.get("/hospitals/:hID/patients/:pID", function(req, res, next) {
+		res.json(req.patient);
 });
 
 //PUT /hospitals/:hID/patients/:pID
