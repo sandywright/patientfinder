@@ -23,10 +23,9 @@ app.set('views', __dirname + '/views');
 // connect to database
 var mongoose = require("mongoose");
 
-var uri = 'mongodb://heroku_fh1cmzb9:r46qhkain6dtlqqro268gu06od@ds133670.mlab.com:33670/heroku_fh1cmzb9';
+//"mongodb://localhost:27017/pf"  || 'mongodb://heroku_fh1cmzb9:r46qhkain6dtlqqro268gu06od@ds133670.mlab.com:33670/heroku_fh1cmzb9'|| 
+var uri = process.env.MONGOLAB_URI;
 mongoose.connect(uri);
-
-//"mongodb://localhost:27017/pf"
 
 var db = mongoose.connection;
 
@@ -56,7 +55,9 @@ app.use(function(req, res, next) {
 });
 
 // set up cross-origin requests
+// http://patientfinder.s3-website.eu-west-2.amazonaws.com
 app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
 	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header('Access-Control-Allow-Credentials', true);
