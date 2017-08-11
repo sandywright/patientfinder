@@ -24,7 +24,7 @@ app.set('views', __dirname + '/views');
 var mongoose = require("mongoose");
 
 //"mongodb://localhost:27017/pf"  || 'mongodb://heroku_fh1cmzb9:r46qhkain6dtlqqro268gu06od@ds133670.mlab.com:33670/heroku_fh1cmzb9'|| 
-var uri = process.env.MONGOLAB_URI;
+var uri = process.env.MONGODB_URI;
 mongoose.connect(uri);
 
 var db = mongoose.connection;
