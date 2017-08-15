@@ -18,5 +18,8 @@
     "mongoose": "^4.4.20",
     "morgan": "^1.8.1",
     "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "node": "7.6.0"
   }
 }
