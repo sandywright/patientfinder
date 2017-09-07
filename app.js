@@ -23,8 +23,8 @@ app.set('views', __dirname + '/views');
 // connect to database
 var mongoose = require("mongoose");
 
-//"mongodb://heroku_4xl7chh6:g1prk8lm3t94dqmqimhhhue71t@ds151450.mlab.com:51450/heroku_4xl7chh6" || process.env.MONGODB_URI || 
-var uri = 'mongodb://localhost:27017/pf';
+//"mongodb://localhost:27017/pf" || process.env.MONGODB_URI || 
+var uri = 'mongodb://heroku_4xl7chh6:g1prk8lm3t94dqmqimhhhue71t@ds151450.mlab.com:51450/heroku_4xl7chh6';
 mongoose.connect(uri);
 
 var db = mongoose.connection;
