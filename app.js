@@ -57,7 +57,7 @@ app.use(function(req, res, next) {
 // set up cross-origin requests
 // http://localhost:3000
 app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
+	res.header("Access-Control-Allow-Origin", 'https://patientfinder.s3-website.eu-west-2.amazonaws.com');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header('Access-Control-Allow-Credentials', true);
 	if(req.method === "OPTIONS") {
