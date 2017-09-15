@@ -90,7 +90,6 @@ app.use(function(err, req, res, next) {
 	});
 });
 
-app.use(express.static(path.join(__dirname, 'build')));
 
 var port = process.env.PORT || 3001;
 
