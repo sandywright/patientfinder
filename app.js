@@ -8,6 +8,8 @@ var session = require("express-session");
 var MongoStore = require('connect-mongo')(session);
 var app = express();
 
+var path = require('path');
+
 app.use(logger("dev"));
 
 // parse incoming requests
@@ -88,6 +90,12 @@ app.use(function(err, req, res, next) {
 			message: err.message
 		}
 	});
+});
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 
