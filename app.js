@@ -2,6 +2,7 @@
 
 var express = require("express");
 var routes = require('./routes');
+var path = require("path");
 var bodyParser = require('body-parser');
 var logger = require("morgan");
 var session = require("express-session");
@@ -70,6 +71,12 @@ app.use(function(req, res, next) {
 
 // Include routes
 app.use("/", routes);
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', function (req, res) {
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 //Catch 404 and forward to error handler
 app.use(function(req, res, next) {
