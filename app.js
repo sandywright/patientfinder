@@ -56,7 +56,7 @@ app.use(function(req, res, next) {
 
 // set up cross-origin requests
 // http://localhost:3000
-//http://patientfinder.s3-website.eu-west-2.amazonaws.com
+// http://patientfinder.s3-website.eu-west-2.amazonaws.com
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -68,8 +68,15 @@ app.use(function(req, res, next) {
 	next();
 });
 
-// include routes
+// Include routes
 app.use("/", routes);
+
+// Client side routing
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', function (req, res) {
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 //Catch 404 and forward to error handler
 app.use(function(req, res, next) {
