@@ -61,10 +61,14 @@ app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header('Access-Control-Allow-Credentials', true);
-	if(req.method === "OPTIONS") {
+	res.header("Access-Control-Allow-Methods", "GET,OPTIONS,PUT,POST,DELETE");
+	
+/*	if(req.method === "OPTIONS") {
 		res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
 		return res.status(200).json({});
 	}
+*/
+
 	next();
 });
 
@@ -89,7 +93,6 @@ app.use(function(err, req, res, next) {
 		}
 	});
 });
-
 
 var port = process.env.PORT || 3001;
 
