@@ -7,8 +7,11 @@ var logger = require("morgan");
 var session = require("express-session");
 var MongoStore = require('connect-mongo')(session);
 var app = express();
+var cors = require('cors');
 
 app.use(logger("dev"));
+
+app.use(cors());
 
 // parse incoming requests
 app.use(bodyParser.json());
@@ -16,8 +19,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // view engine set up
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/views');
+// no view engine required - dedicated frontend
+// app.set('view engine', 'pug');
+// app.set('views', __dirname + '/views');
 
 
 // connect to database
