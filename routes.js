@@ -144,7 +144,7 @@ router.post("/register", function(req, res, next) {
 
 //GET /hospitals
 // Route for hospitals collection
-router.get("/hospitals", /*mid.requiresLogin*/, function(req, res, next) {
+router.get("/hospitals", mid.requiresLogin, function(req, res, next) {
 	if(! req.session.userId) {
 		var err = new Error("You are not authorized to view this page");
 		err.status = 403;
@@ -168,7 +168,7 @@ router.get("/hospitals", /*mid.requiresLogin*/, function(req, res, next) {
 
 //POST /hospitals
 // Route for creating hospital
-router.post("/hospitals", /*mid.requiresLogin*/, function(req, res, next) {
+router.post("/hospitals", mid.requiresLogin, function(req, res, next) {
 	var hospital = new Hospital(req.body);
 	hospital.save(function(err, hospital){
 		if(err) return next(err);
@@ -179,7 +179,7 @@ router.post("/hospitals", /*mid.requiresLogin*/, function(req, res, next) {
 
 //GET /hospitals/:id
 // Route for specific hospital
-router.get("/hospitals/:hID", /*mid.requiresLogin*/, function(req, res, next) {
+router.get("/hospitals/:hID", mid.requiresLogin, function(req, res, next) {
 		res.json(req.hospital);
 });
 
