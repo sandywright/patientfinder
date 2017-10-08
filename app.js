@@ -28,6 +28,8 @@ var mongoose = require("mongoose");
 var uri = 'mongodb://heroku_4xl7chh6:g1prk8lm3t94dqmqimhhhue71t@ds151450.mlab.com:51450/heroku_4xl7chh6';
 mongoose.connect(uri);
 
+app.set('superSecret', 'sandywright')
+
 var db = mongoose.connection;
 
 db.on("error", function(err){
@@ -59,7 +61,7 @@ app.use(function(req, res, next) {
 // http://localhost:3000
 // http://patientfinder.s3-website.eu-west-2.amazonaws.com
 app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
+	res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header('Access-Control-Allow-Credentials', true);
 	if(req.method === "OPTIONS") {
@@ -83,7 +85,6 @@ app.use(function(req, res, next) {
 });
 
 //Error handler
-
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	res.json({

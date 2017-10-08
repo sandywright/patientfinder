@@ -6,6 +6,7 @@ var Hospital = require('./models/hospital').Hospital;
 var User = require('./models/user').User;
 var mid = require('./middleware');
 
+
 router.param("hID", function(req, res, next, id){
 	Hospital.findById(id, function(err, doc){
 		if(err) return next(err);
@@ -36,7 +37,7 @@ router.get("/index", mid.loggedOut, function(req, res, next) {
 });
 
 //GET /profile
-router.get("/profile", mid.requiresLogin, function(req, res, next) {
+router.get("/profile", webToken, function(req, res, next) {
 	if(! req.session.userId) {
 		var err = new Error("You are not logged in");
 		err.status = 403;
@@ -86,6 +87,26 @@ router.post("/login", function(req, res, next) {
 				res.status(201);
 				res.json(req.session);
 				//return res.redirect('http://localhost:3000/home');
+
+				//create JSON web token - START
+				const payload = {
+			      admin: user.admin 
+			    };
+			        var token = jwt.sign(payload, app.get('superSecret'), {
+			          expiresInMinutes: 1440 // expires in 24 hours
+			        });
+
+			        // return the information including token as JSON
+			        res.json({
+			          success: true,
+			          message: 'Enjoy your token!',
+			          token: token
+			        });
+			      }   
+
+			    }
+			    //create JSON web token - FINISH
+
 			}
 		});
 	} else {
