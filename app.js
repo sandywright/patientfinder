@@ -14,18 +14,11 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// view engine set up
-// no view engine required - dedicated frontend
-// app.set('view engine', 'pug');
-// app.set('views', __dirname + '/views');
-
-
 // connect to database
 var mongoose = require("mongoose");
 
-//"mongodb://localhost:27017/pf" || process.env.MONGODB_URI || 
-var uri = 'mongodb://heroku_4xl7chh6:g1prk8lm3t94dqmqimhhhue71t@ds151450.mlab.com:51450/heroku_4xl7chh6';
+//"mongodb://heroku_4xl7chh6:g1prk8lm3t94dqmqimhhhue71t@ds151450.mlab.com:51450/heroku_4xl7chh6" || process.env.MONGODB_URI || 
+var uri = 'mongodb://localhost:27017/pf';
 mongoose.connect(uri);
 
 var db = mongoose.connection;
@@ -48,18 +41,11 @@ app.use(session({
 	})
 })); 
 
-
-// make user ID available in templates
-app.use(function(req, res, next) {
-	res.locals.currentUser = req.session.userId;
-	next();
-});
-
 // set up cross-origin requests
 // http://localhost:3000
 // http://patientfinder.s3-website.eu-west-2.amazonaws.com
 app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
+	res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	res.header('Access-Control-Allow-Credentials', true);
 	if(req.method === "OPTIONS") {
@@ -67,13 +53,11 @@ app.use(function(req, res, next) {
 		return res.status(200).json({});
 	}
 
-
 	next();
 });
 
 // Include routes
 app.use("/", routes);
-
 
 //Catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -83,7 +67,6 @@ app.use(function(req, res, next) {
 });
 
 //Error handler
-
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	res.json({
