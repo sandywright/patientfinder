@@ -46,7 +46,7 @@ app.use(session({
 // http://patientfinder.s3-website.eu-west-2.amazonaws.com
 // "Origin, X-Requested-With, Content-Type, Accept"
 app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+	res.header("Access-Control-Allow-Origin", 'http://patientfinder.s3-website.eu-west-2.amazonaws.com');
 	res.header("Access-Control-Allow-Headers", 'x-access-token, Origin, X-Requested-With, Content-Type, Accept, Authorization');
 	res.header('Access-Control-Allow-Credentials', true);
 	if(req.method === "OPTIONS") {
